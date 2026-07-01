@@ -1,4 +1,6 @@
+
 import os
+import shutil
 
 # toolchains options
 ARCH='arm'
@@ -17,7 +19,13 @@ if os.getenv('RTT_ROOT'):
 # EXEC_PATH is the compiler execute path, for example, CodeSourcery, Keil MDK, IAR
 if  CROSS_TOOL == 'gcc':
     PLATFORM    = 'gcc'
-    EXEC_PATH   = r'D:\tool_chains\STM32CubeCLT_1.21.0\GNU-tools-for-STM32\bin'
+    gcc_path = shutil.which('arm-none-eabi-gcc') or shutil.which('arm-none-eabi-gcc.exe')
+    if os.getenv('RTT_EXEC_PATH'):
+        EXEC_PATH = os.getenv('RTT_EXEC_PATH')
+    elif gcc_path:
+        EXEC_PATH = os.path.dirname(gcc_path)
+    else:
+        EXEC_PATH = r'D:\tool_chains\STM32CubeCLT_1.21.0\GNU-tools-for-STM32\bin'
 elif CROSS_TOOL == 'keil':
     PLATFORM    = 'armcc'
     EXEC_PATH   = r'C:/Keil_v5'
